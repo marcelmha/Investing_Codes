@@ -1,0 +1,41 @@
+name: Executa Script B3 Oportunidades
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+      timezone: America/Sao_Paulo
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Criar arquivos de configuração
+        env:
+          APP_NAME: ${{ secrets.APP_NAME }}
+          APP_PW: ${{ secrets.APP_PW }}
+          DESTINATARIOS: ${{ secrets.DESTINATARIOS }}
+          SERVICEMAIL: ${{ secrets.SERVICEMAIL }}
+          TICKERS: ${{ secrets.TICKERS }}
+        run: |
+          mkdir -p Config
+          echo "$APP_NAME" > Config/app.txt
+          echo "$APP_PW" > Config/pw.txt
+          echo "$DESTINATARIOS" > Config/destinatarios.txt
+          echo "$SERVICEMAIL" > Config/servicemail.txt
+          echo "$TICKERS" > Config/tickers.txt
+
+      - name: Instalar dependências
+        run: |
+          pip install yfinance tabulate
+
+      - name: Executar script
+        run: python B3_Rec_Sel_List_Top.py
