@@ -10,8 +10,11 @@ import os
 import sys
 from io import StringIO
 
-# Configurações de caminho
-CONFIG_PATH = r"D:\Temp\Config"
+# Configurações de caminho para rodar localmente
+#CONFIG_PATH = r"D:\Temp\Config"
+
+# Configurações de caminho para rodar no github
+#CONFIG_PATH = "Config"
 
 # ===================================================================
 # 1. PRIMEIRO DEFINIMOS TODAS AS FUNÇÕES AUXILIARES
