@@ -356,7 +356,8 @@ def main():
 logging.basicConfig(
     filename=os.path.join(OUTPUT_PATH, 'script.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s'
 )
-log = logging.getLogger() ===================================================================
+log = logging.getLogger()
+ ===================================================================
 # 3. EXECUÇÃO DO CÓDIGO
 # ===================================================================
 if __name__ == "__main__":
