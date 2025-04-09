@@ -10,45 +10,36 @@ import os
 import sys
 from io import StringIO
 
-# Configurações de caminho para rodar localmente
-#CONFIG_PATH = r"D:\Temp\Config"
-
-# Configurações de caminho para rodar no github
-CONFIG_PATH = "Config"
-
 # ===================================================================
 # 1. PRIMEIRO DEFINIMOS TODAS AS FUNÇÕES AUXILIARES
 # ===================================================================
 
 def get_b3_tickers():
     try:
-        file_path = os.path.join(CONFIG_PATH, "tickers.txt")
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return [line.strip() for line in file if line.strip()]
+        return os.environ.get('TICKERS', '').splitlines()
     except Exception as e:
         print(f"\n⚠️ Erro ao ler tickers: {str(e)}")
-        exit()
-
-def get_config_file(filename):
-    try:
-        with open(os.path.join(CONFIG_PATH, filename), 'r', encoding='utf-8') as f:
-            return f.read().strip()
-    except Exception as e:
-        print(f"Erro ao ler {filename}: {str(e)}")
         exit()
 
 def get_recipients():
     try:
         recipients = []
-        with open(os.path.join(CONFIG_PATH, "destinatarios.txt"), 'r', encoding='utf-8') as f:
-            for line in f:
-                if ',' in line:
-                    name, email = line.strip().split(',', 1)
-                    recipients.append((name.strip('"'), email.strip()))
+        destinos = os.environ.get('DESTINATARIOS', '').splitlines()
+        for line in destinos:
+            if ',' in line:
+                name, email = line.strip().split(',', 1)
+                recipients.append((name.strip('"'), email.strip()))
         return recipients
     except Exception as e:
         print(f"Erro ao ler destinatários: {str(e)}")
         exit()
+        
+def get_env_var(name):
+    value = os.environ.get(name)
+    if not value:
+        print(f"Variável de ambiente {name} não encontrada")
+        exit()
+    return value
 
 def analyze_stock(ticker):
     try:
@@ -129,8 +120,9 @@ def analyze_stock(ticker):
         return None
 
 def save_to_csv(data, filename):
+    filepath = os.path.join(OUTPUT_PATH, filename)
     headers = data[0].keys()
-    with open(filename, 'w', newline='', encoding='utf-8') as file:
+    with open(filepath, 'w', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=headers, delimiter=';')
         writer.writeheader()
         writer.writerows(data)
@@ -272,9 +264,9 @@ def generate_html_report(data):
     return html
 
 def send_email(csv_filename, html_content):
-    sender_email = get_config_file("servicemail.txt")
-    app_name = get_config_file("app.txt")
-    app_password = get_config_file("pw.txt")
+    sender_email = get_env_var('SERVICEMAIL')
+    app_name = get_env_var('APP_NAME')
+    app_password = get_env_var('APP_PASSWORD')
     recipients = get_recipients()
 
     with open(csv_filename, "rb") as f:
