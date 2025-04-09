@@ -1,41 +1,41 @@
-name: Executa Script B3 Oportunidades
+name: Daily Stock Analysis
 
 on:
   schedule:
-    - cron: '0 18 * * *'
-      timezone: America/Sao_Paulo
-  workflow_dispatch:
+    - cron: '0 18 * * 1-5'  # Executa dias úteis às 18:00 (6PM UTC = 15h BR)
+  workflow_dispatch:  # Permite execução manual
 
 jobs:
-  run-script:
+  analyze:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Configurar Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      - name: Criar arquivos de configuração
-        env:
-          APP_NAME: ${{ secrets.APP_NAME }}
-          APP_PW: ${{ secrets.APP_PW }}
-          DESTINATARIOS: ${{ secrets.DESTINATARIOS }}
-          SERVICEMAIL: ${{ secrets.SERVICEMAIL }}
-          TICKERS: ${{ secrets.TICKERS }}
-        run: |
-          mkdir -p Config
-          echo "$APP_NAME" > Config/app.txt
-          echo "$APP_PW" > Config/pw.txt
-          echo "$DESTINATARIOS" > Config/destinatarios.txt
-          echo "$SERVICEMAIL" > Config/servicemail.txt
-          echo "$TICKERS" > Config/tickers.txt
+    - name: Install dependencies
+      run: |
+        pip install yfinance tabulate
 
-      - name: Instalar dependências
-        run: |
-          pip install yfinance tabulate
+    - name: Run analysis
+      env:
+        TICKERS: ${{ secrets.TICKERS }}
+        SERVICEMAIL: ${{ secrets.SERVICEMAIL }}
+        DESTINATARIOS: ${{ secrets.DESTINATARIOS }}
+        APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+        APP_NAME: ${{ secrets.APP_NAME }}
+        OUTPUT_PATH: './reports'
+      run: |
+        mkdir -p reports
+        python B3_Rec_Sel_List_Top.py
 
-      - name: Executar script
-        run: python B3_Rec_Sel_List_Top.py
+    - name: Upload report
+      uses: actions/upload-artifact@v3
+      with:
+        name: stock-report
+        path: ./reports/*.csv
