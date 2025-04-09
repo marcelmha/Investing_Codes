@@ -345,12 +345,47 @@ def main():
             send_email(csv_path, html_content)  # ✅ Chamada única aqui
         else:
             print("\n⚠️ Nenhum sinal relevante encontrado")
-            return  # ⚠️ Importantíssimo!
+            exit()
 
-        # ... (resto do código mantido)
-
+        # Console output apenas para verificação
+        headers = ["Ticker", "Preço", "Recomendação", "Tendência (%)", "Volume (%)", 
+          "SG (38.2%)", "SG (61.8%)", "SG (100%)", "SL (23.6%)", "SL (38.2%)", "SL (61.8%)"]
+        
+        print("\n" + "="*120)
+        print(f"📊 RELATÓRIO CONSOLIDADO - {len(resultados_ordenados)} sinal(ais)")
+        print("="*120)
+        
+        display_data = []
+        for item in resultados_ordenados:
+            display_item = {
+                'Ticker': item['Ticker'],
+                'Preço': f"R${item['Preço']:.2f}",
+                'Recomendação': item['Recomendação'],
+                'Tendência (%)': f"{item['Tendência (%)']:.2f}%",
+                'Volume (%)': f"{item['Volume (%)']:.1f}%",
+                'SG (38.2%)': f"R${item['SG (38.2%)']:.2f}",
+                'SG (61.8%)': f"R${item['SG (61.8%)']:.2f}",
+                'SG (100%)': f"R${item['SG (100%)']:.2f}",
+                'SL (23.6%)': f"R${item['SL (23.6%)']:.2f}",
+                'SL (38.2%)': f"R${item['SL (38.2%)']:.2f}",
+                'SL (61.8%)': f"R${item['SL (61.8%)']:.2f}"
+            }
+            display_data.append(display_item)
+        
+        print(tabulate(
+            [list(item.values()) for item in display_data],
+            headers=headers,
+            tablefmt="fancy_grid",
+            numalign="right",
+            stralign="center"
+        ))
+        print("="*120)
+        
     finally:
         sys.stdout = original_stdout
+    
+    # Enviar e-mail com HTML gerado
+    send_email(csv_filename, html_content)
 #
 #Adding Logging
 logging.basicConfig(
