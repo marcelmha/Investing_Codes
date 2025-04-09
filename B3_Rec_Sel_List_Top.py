@@ -22,7 +22,7 @@ def get_b3_tickers():
     try:
         return [t.strip() for t in os.environ.get('TICKERS', '').splitlines() if t.strip()]
     except Exception as e:
-        print(f"\n⚠️ Erro ao ler tickers: {str(e)}")
+        log.error(f"\n⚠️ Erro ao ler tickers: {str(e)}")
         exit()
 
 def get_recipients():
@@ -35,13 +35,13 @@ def get_recipients():
                 recipients.append((name.strip('"'), email.strip()))
         return recipients
     except Exception as e:
-        print(f"Erro ao ler destinatários: {str(e)}")
+        log.error(f"Erro ao ler destinatários: {str(e)}")
         exit()
         
 def get_env_var(name):
     value = os.environ.get(name)
     if not value:
-        print(f"Variável de ambiente {name} não encontrada")
+        log.errror(f"Variável de ambiente {name} não encontrada")
         exit()
     return value
 
@@ -120,7 +120,7 @@ def analyze_stock(ticker):
         }
         
     except Exception as e:
-        print(f"Erro no ticker {ticker}: {str(e)}")
+        log.error(f"Erro no ticker {ticker}: {str(e)}")
         return None
 
 def save_to_csv(data, filename):
@@ -301,7 +301,7 @@ def send_email(csv_filename, html_content):
         
         server.quit()
     except Exception as e:
-        print(f"Erro ao enviar e-mail: {str(e)}")
+        log.error(f"Erro ao enviar e-mail: {str(e)}")
         exit()
 
 # ===================================================================
@@ -317,7 +317,7 @@ def main():
         
         # Adicione esta validação
         if not tickers:
-            print("⛔ Nenhum ticker configurado na variável TICKERS")
+            log.error("⛔ Nenhum ticker configurado na variável TICKERS")
             exit()
 
         resultados = []
@@ -354,7 +354,9 @@ def main():
 #
 #Adding Logging
 logging.basicConfig(
-    filename=os.path.join(OUTPUT_PATH, 'script.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s'
+    filename=os.path.join(OUTPUT_PATH, 'script.log'), 
+level=logging.INFO, 
+format='%(asctime)s - %(levelname)s - %(message)s'
 )
 log = logging.getLogger()
  ===================================================================
