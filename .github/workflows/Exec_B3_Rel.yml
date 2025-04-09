@@ -24,11 +24,11 @@ jobs:
 
     - name: Run analysis
       env:
-        TICKERS: ${{ secrets.TICKERS }}
-        SERVICEMAIL: ${{ secrets.SERVICEMAIL }}
-        DESTINATARIOS: ${{ secrets.DESTINATARIOS }}
-        APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
-        APP_NAME: ${{ secrets.APP_NAME }}
+        TICKERS: ${{ secrets.TICKERS }}          # Exemplo: "PETR4\nVALE3\nBBDC4"
+        DESTINATARIOS: ${{ secrets.DESTINATARIOS }} # Exemplo: "Nome,email\nOutro,outro@email.com"
+        SERVICEMAIL: ${{ secrets.SERVICEMAIL }}  # Seu e-mail completo
+        APP_PASSWORD: ${{ secrets.APP_PASSWORD }} # Senha de app do Gmail
+        APP_NAME: ${{ secrets.APP_NAME }}         # Nome do remetente
         OUTPUT_PATH: './reports'
       run: |
         mkdir -p reports
