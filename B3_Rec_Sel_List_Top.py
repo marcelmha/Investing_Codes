@@ -278,7 +278,7 @@ def send_email(csv_filename, html_content):
     try:
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(sender_email, app_password)
+        server.login(app_name, app_password)
         
         for name, email in recipients:
             msg = MIMEMultipart()
