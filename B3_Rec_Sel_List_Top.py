@@ -9,6 +9,7 @@ from email.mime.application import MIMEApplication
 import os
 import sys
 from io import StringIO
+import logging
 
 OUTPUT_PATH = os.environ.get('OUTPUT_PATH', os.getcwd())
 os.makedirs(OUTPUT_PATH, exist_ok=True)  # Cria o diretório se não existir
@@ -350,7 +351,12 @@ def main():
 
     finally:
         sys.stdout = original_stdout
-# ===================================================================
+#
+#Adding Logging
+logging.basicConfig(
+    filename=os.path.join(OUTPUT_PATH, 'script.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s'
+)
+log = logging.getLogger() ===================================================================
 # 3. EXECUÇÃO DO CÓDIGO
 # ===================================================================
 if __name__ == "__main__":
