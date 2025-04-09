@@ -32,8 +32,8 @@ jobs:
         OUTPUT_PATH: './reports'
       run: |
         mkdir -p reports
-        python B3_Rec_Sel_List_Top.py
-      continue-on-error: true
+        python src/B3_Rec_Sel_List_Top.py
+      continue-on-error: false
 
     - name: Upload report
       uses: actions/upload-artifact@v3
@@ -43,7 +43,7 @@ jobs:
     
     - name: Check if report exists
       run: |
-        if [ ! -f ".reports/*.csv" ]; then
+        if [ ! -f "./reports/*.csv" ]; then
           echo "Nenhum relatório foi gerado."
           exit 1
         fi 
@@ -52,4 +52,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: analysis-logs
-        path: .logs/*.log
+        path: ./reports/script.log
+   
+    - name: List reports directory
+      run: ls -la ./reports
+
+    - name: List logs directory
+      run: ls -la ./reports
