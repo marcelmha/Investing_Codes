@@ -98,6 +98,11 @@ p_rsi <- ggplot(dados_analise, aes(x = ref_date)) +
   ylim(0, 100) +
   theme_minimal()
 
+#Salva em PNG
+png("grafico.png", width = 1000, height = 1200)
+grid.arrange(p_candle, p_volume, p_macd, p_rsi, ncol = 1)
+dev.off()
+
 # 4. Análise Técnica Detalhada ---------------------------------------------------
 ultimo <- tail(dados_analise, 1)
 
