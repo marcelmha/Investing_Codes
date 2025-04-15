@@ -8,8 +8,8 @@ library(tidyr)
 library(readr)
 
 # Configurações ------------------------------------------------------------------
-caminho_tickers <- "D:\\Temp\\Config\\tickers.txt"
-diretorio_relatorios <- "D:\\Projetos_Marcel\\Relatorios"
+caminho_tickers <- "./tickers.txt"
+diretorio_relatorios <- "./Relatorios"
 
 # Criar diretório se não existir
 if(!dir.exists(diretorio_relatorios)) {
